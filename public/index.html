@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- This meta tag ensures that the website renders correctly across different device sizes, enhancing mobile responsiveness. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Link to the external CSS stylesheet. Uncomment if you wish to customize or add styling. -->
+    <link rel="stylesheet" href="styles.css">  
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
+
+    <title>Coop Job Board</title>
+</head>
+<body>
+    <!-- ===================================================================================== -->
+    <!-- Display the current status of the database connection. 
+         !!HERE TO HELP U DEBUGGING, NOT REQUIRED IN YOUR OWN PROJECT!!
+         -->
+    <h1>Database Connection Status: 
+        <!-- An in-line placeholder to display connection status. -->
+        <span id="dbStatus"> </span>
+        <!-- A loading GIF, will be hided once get the status. -->
+        <img id="loadingGif" class="loading-gif" src="loading_100px.gif" alt="Loading...">
+    </h1>
+
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <!-- Show 'Coop Job Board'.
+        Data will be fetched and inserted here dynamically using JavaScript. -->
+    <h2>Coop Job Board</h2>
+    <table id="jobBoard" border="1">
+        <thead>
+            <tr>
+                <!--Table head, need to be adjusted accordingly to align with your own.-->
+                <th>ID</th>
+                <th>Company</th>
+                <th>Position</th>
+                <th>Deadline</th>
+                <th>Term</th>
+                <th>Duration</th>
+                <th>Date Posted</th>
+            </tr>
+        </thead>
+        <tbody id = "jobBoardBody">
+        </tbody>
+    </table>
+
+    <h2>Coop Advisors</h2>
+    <table id="AdvisorsBoard" border="1">
+        <thead>
+        <tr>
+            <!--Table head, need to be adjusted accordingly to align with your own.-->
+            <th>AdvisorID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+        </tr>
+        </thead>
+        <tbody id = "AdvisorsBoardBody">
+        </tbody>
+    </table>
+
+    <h2>Coop Students</h2>
+    <table id="StudentsBoard" border="1">
+        <thead>
+        <tr>
+            <!--Table head, need to be adjusted accordingly to align with your own.-->
+            <th>StudentID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Year</th>
+            <th>NApplications</th>
+            <th>AdvisorID</th>
+        </tr>
+        </thead>
+        <tbody id = "studentsBoardBody">
+        </tbody>
+    </table>
+    <h2>Submitted Applications</h2>
+    <table id="ApplicationsBoard" border="1">
+        <thead>
+        <tr>
+            <!--Table head, need to be adjusted accordingly to align with your own.-->
+            <th>StudentID</th>
+            <th>Application ID</th>
+        </tr>
+        </thead>
+        <tbody id = "ApplicationsBoardBody">
+        </tbody>
+    </table>
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2>Reset Job Board</h2>
+    <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
+    <button id="resetBtn"> Reset </button> <br>
+    <!-- A placeholder to display messages related to the reset operation. -->
+    <div id="resetResultMsg"></div>
+
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2>Search Jobs</h2>
+    Please enter in Query Options:
+    <h2 id = "query"></h2>
+    <input type="text" id="queryColumn" placeholder="eg. company" required>
+    <input type="text" id="queryOperand" placeholder="eg. =,>,<" required>
+    <input type="text" id="queryVariable" placeholder="eg. company 1" required>
+    <br><br>
+    <button type="submit" id = "build"> Build </button>
+    <button type="submit" id = "and"> AND</button>
+    <button type="submit" id = "or"> OR </button>
+    <button type="submit" id = "reset"> Reset </button>
+    <button type="submit" id="QueryButton"> Search </button> <br>
+
+
+    <table id="SearchJobsTable" border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Company</th>
+            <th>Position</th>
+            <th>Deadline</th>
+            <th>Term</th>
+            <th>Duration</th>
+            <th>Date Posted</th>
+        </tr>
+        </thead>
+        <tbody id="queryTableBody">
+        <!--        results        -->
+        </tbody>
+    </table>
+
+    <br><hr><br>
+    <h2>Insert a Student-Application pair (Student and Application ID must both exist) </h2>
+    <form id="insertApplication">
+        Student ID: <input type="number" id="studentID" placeholder="Enter Student ID" required> <br><br>
+        Application ID: <input type="number" id="postingID" placeholder="Enter Application ID"> <br><br>
+
+        <button type="submit"> Insert </button> <br>
+    </form>
+    <div id="insertApplicationResultMsg"></div>
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2>Insert a Student</h2>
+    <form id="insertStudent">
+        Student ID: <input type="number" id="updateStudentID" placeholder="Enter Student ID" required> <br><br>
+        Name: <input type="text" id="updateStudentName" placeholder="Enter Student Name" required> <br><br>
+        Email: <input type="text" id="updateStudentEmail" placeholder="Enter Student Email" required> <br><br>
+        Standing: <input type="number" id="updateStudentStanding" placeholder="Enter Student Year" required> <br><br>
+        Number of Applications: <input type="number" id="updateStudentNapplications" placeholder="Enter Student ID" required> <br><br>
+        Advisor ID: <input type="number" id="updateStudentAdvisorID" placeholder="Enter Advisor ID" required> <br><br>
+        <button type="submit"> Insert </button> <br>
+    </form>
+    <!-- A placeholder to display messages related to the update operation. -->
+    <div id="insertStudentResultMsg"></div>
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2>Find Students who have applied to all Jobs</h2>
+    <p>Find Student</p>
+    <button id="Divide"> Search </button> <br>
+    <table id="DivideBoard" border="1">
+        <thead>
+        <tr>
+            <th>Student Names</th>
+        </tr>
+        </thead>
+        <tbody id = "DivideBoardBody">
+        </tbody>
+    </table>
+    <!-- A placeholder to display messages related to the reset operation. -->
+    <div id="DivideResultMsg"></div>
+
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2 id="title">Find Students' information who applied to a specific Job</h2>
+
+    Job Posting ID: <input type="number" id="findPostingID" placeholder="Enter ID" required> <br><br>
+    <button id="joinSearch">Search</button> <br>
+
+    <!-- A placeholder to display messages related to the joinQuery operation. -->
+    <div id="joinQueryResultMessage"></div>
+
+    <h4>Students who applied to the specified Job Posting:</h4>
+    <table id="joinQueryTable" border="1">
+        <thead>
+            <tr>
+                <th>StudentID</th>
+                <th>Name</th>
+                <th>NApplications</th>
+            </tr>
+        </thead>
+        <tbody id="joinQueryTableBody">
+        <!--        results        -->
+        </tbody>
+    </table>
+
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2> Insert Values into Job Board </h2>
+    <form id="insertJobBoard">
+        ID: <input type="number" id="insertId" placeholder="ID" required> <br><br>
+        Company: <input type="text" id="insertCompany" placeholder="Company" maxlength="50" required> <br><br>
+        Position: <input type="text" id="insertPosition" placeholder="Position" maxlength="50"> <br><br>
+        Deadline: <input type="date" id="insertDeadline" placeholder="Deadline"> <br><br>
+
+        Term:
+        <br> <!-- "name" attribute is for grouping the buttons -->
+        <input type="radio" id="winter" name="term" value="Winter">
+        <label for="winter">Winter</label><br>
+
+        <input type="radio" id="spring" name="term" value="Spring">
+        <label for="spring">Spring</label><br>
+
+        <input type="radio" id="summer" name="term" value="Summer">
+        <label for="summer">Summer</label><br><br>
+
+        Duration:
+        <br> <!-- "name" attribute is for grouping the buttons -->
+        <input type="radio" id="four" name="duration" value="4">
+        <label for="four">4</label><br>
+        
+        <input type="radio" id="eight" name="duration" value="8">
+        <label for="eight">8</label><br>
+
+        <input type="radio" id="twelve" name="duration" value="12">
+        <label for="twelve">12</label><br><br>
+
+        <button type="submit"> Insert </button> <br>
+    </form>
+    <div id="insertResultMsg"></div>
+
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2> Filter Job Board (Please enter as a comma separated list) </h2>
+    <form id="filterJobBoard">
+        What column would you like to filter on?: <input type="text" id="insertFilter" placeholder="Company, Position"> <br><br>
+
+        <button type="submit"> Filter </button> <br>
+    </form>
+    <div id="filterResultMsg"></div>
+
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <!-- User inputs an ID associated with a job posting, and that job posting will be removed  -->
+    <h2>Remove Job Posting From Job Board (Using ID)</h2>
+    <form id="removeIDJobBoard">
+        ID: <input type="number" id="removeID" placeholder="Enter ID"> <br><br>
+
+        <button type="submit"> Remove </button> <br>
+    </form>
+    <!-- A placeholder to display messages related to the update operation. -->
+    <div id="updateRemoveIDResultMsg"></div>
+
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2>Update Job Board</h2>
+    <form id="updateJobBoard">
+        Target ID: <input type="number" id="targetID" placeholder="Enter target ID" required> <br><br>
+        Which column would you like to update?: <input type="text" id="targetColumn" placeholder="eg. Position"> <br><br>
+        What value would you like to update with?: <input type="text" id="newValue" placeholder="Enter New Value" maxlength="50"> <br><br>
+
+
+        <button type="submit"> Update </button> <br>
+    </form>
+    <!-- A placeholder to display messages related to the update operation. -->
+    <div id="updateResultMsg"></div>
+
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2>Count how many Jobs are being Offered by Each Company</h2>
+    <button id="countJobBoard"> Count </button> <br><br>
+    <!-- A placeholder to display the count result. -->
+    <div id="countResultMsg"></div> <br>
+    <table id="countJobsTable" border="1">
+        <thead>
+        <tr>
+            <th>Company</th>
+            <th>Jobs Offered</th>
+        </tr>
+        </thead>
+        <tbody id="countJobsTableBody">
+        <!--        results        -->
+        </tbody>
+    </table>
+
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2>Which Companies offer jobs that are at least ___ months long</h2>
+    <form id="countHavingJobBoard">
+        Minimum Duration of Months?:
+        <input type="number" id="durationMonths" placeholder="eg. 4,8,12" required> <br><br>
+
+        <button type="submit"> Search </button> <br>
+    </form>
+
+    <table id="countHavingJobsTable" border="1">
+        <thead>
+        <tr>
+            <th>Company</th>
+        </tr>
+        </thead>
+        <tbody id="countHavingJobsTableBody">
+        <!--        results        -->
+        </tbody>
+    </table>
+
+    <br><hr><br> <!-- ========================================================================= -->
+
+    <h2>Find the average number of Applications submitted per Student for each Department that has at least 2 students in the Department</h2>
+    <button id="countAvgApps"> Count </button> <br><br>
+    <div id="countAvgAppsMsg"></div> <br>
+    <table id="countAvgAppsTable" border="1">
+        <thead>
+        <tr>
+            <th>Department</th>
+            <th>NApplications</th>
+        </tr>
+        </thead>
+        <tbody id="countAvgAppsTableBody">
+        <!--        results        -->
+        </tbody>
+    </table>
+
+    <!-- ===================================================================================== -->
+    <!-- External JavaScript file that contains the functionality/logic for the operations above. -->
+    <script src="scripts.js"></script>
+</body>
+</html>
